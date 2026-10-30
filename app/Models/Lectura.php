@@ -16,6 +16,7 @@ class Lectura extends Model
 
     protected $casts = [
         'valor'=>'decimal:4',
+        'medida_at'=>'datetime',
     ];
 
     //TODO hacer relaciones
