@@ -11,7 +11,7 @@ class Lectura extends Model
     protected $fillable = [
         'sensor_id',
         'valor',
-        'medidad_at',
+        'medida_at',
     ];
 
     protected $casts = [
