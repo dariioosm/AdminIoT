@@ -16,11 +16,14 @@ class Sensor extends Model
         'medida',
         'umbral_minimo',
         'umbral_maximo',
+        'tipo_dato',
+        'valor_esperado',
         'activo',
     ];
 
     protected $casts = [
         'activo'=>'boolean',
+        'valor_esperado'=>'boolean',
         'umbral_minimo'=>'decimal:4',
         'umbral_maximo'=>'decimal:4',
     ];

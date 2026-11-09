@@ -8,3 +8,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/lecturas',[LecturaController::class,'store']);
+Route::get('/lecturas',[LecturaController::class,'']);
