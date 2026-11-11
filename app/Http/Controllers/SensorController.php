@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dispositivo;
 use App\Models\Sensor;
 use Illuminate\Http\Request;
-
+use Illuminate\Database\QueryException;
 class SensorController extends Controller
 {
     /**
@@ -102,10 +102,18 @@ class SensorController extends Controller
     {
         $sensor=Sensor::findOrFail($id);
         $dispositivoId=Dispositivo::findOrFail($sensor->dispositivo->id);
-        $sensor->delete();
+        try {
+    $sensor->delete();
+} catch (QueryException $excepcion) {
+    if ((int) ($excepcion->errorInfo[1] ?? 0) !== 1451) {
+        throw $excepcion;
+    }
 
-        return redirect()->route('dispositivos.show',['id'=>$dispositivoId])
-        ->with('success','Sensor eliminado correctamente');
+    return back()->with(
+        'error',
+        'Este sensor tiene lecturas o alertas asociadas. Puedes desactivarlo para conservar su historial.'
+    );
+}
 
     }
 
