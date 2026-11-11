@@ -19,6 +19,11 @@
     </nav>
 
     <main class="container py-4">
+        @if (session('error'))
+    <div class="alert alert-warning" role="alert">
+        {{ session('error') }}
+    </div>
+@endif
         @yield('contenido')
 
     </main>
