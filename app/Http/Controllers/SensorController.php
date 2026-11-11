@@ -98,24 +98,17 @@ class SensorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        $sensor=Sensor::findOrFail($id);
-        $dispositivoId=Dispositivo::findOrFail($sensor->dispositivo->id);
-        try {
+    public function destroy(int $id)
+{
+    $sensor = Sensor::findOrFail($id);
+    $dispositivoId = $sensor->dispositivo_id;
+
     $sensor->delete();
-} catch (QueryException $excepcion) {
-    if ((int) ($excepcion->errorInfo[1] ?? 0) !== 1451) {
-        throw $excepcion;
-    }
 
-    return back()->with(
-        'error',
-        'Este sensor tiene lecturas o alertas asociadas. Puedes desactivarlo para conservar su historial.'
-    );
+    return redirect()
+        ->route('dispositivos.show', ['id' => $dispositivoId])
+        ->with('success', 'Sensor eliminado.');
 }
-
-    }
 
 
     public function simularPuerta(Request $request, string $id){
