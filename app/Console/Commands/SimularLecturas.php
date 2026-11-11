@@ -71,26 +71,34 @@ class SimularLecturas extends Command
     }
 
     private function valorPara(Sensor $sensor): float|int
-    {
-        if ($sensor->tipo_dato === 'logico') {
-            return (int) ($sensor->valor_simulado ?? $sensor->valor_esperado ?? 0);
-        }
-
-        $minimo = $sensor->umbral_minimo;
-        $maximo = $sensor->umbral_maximo;
-
-        if ($minimo !== null && $maximo !== null) {
-            return ((float) $minimo + (float) $maximo) / 2;
-        }
-
-        if ($minimo !== null || $maximo !== null) {
-            return (float) ($minimo ?? $maximo);
-        }
-
-        return match ($sensor->tipo) {
-            'temperatura' => 4.2,
-            'humedad' => 65,
-            default => 0,
-        };
+{
+    if ($sensor->tipo_dato === 'logico') {
+        return (int) ($sensor->valor_simulado ?? $sensor->valor_esperado ?? 0);
     }
+
+    $minimo = $sensor->umbral_minimo;
+    $maximo = $sensor->umbral_maximo;
+
+    if ($minimo !== null && $maximo !== null) {
+        return ((float) $minimo + (float) $maximo) / 2;
+    }
+
+    $valor = match ($sensor->tipo) {
+        'temperatura' => 4.2,
+        'humedad' => 65,
+        'consumo' => $maximo !== null ? (float) $maximo * 0.5 : 450,
+        'nivel' => 55,
+        default => (float) ($minimo ?? $maximo ?? 0),
+    };
+
+    if ($minimo !== null) {
+        $valor = max($valor, (float) $minimo);
+    }
+
+    if ($maximo !== null) {
+        $valor = min($valor, (float) $maximo);
+    }
+
+    return $valor;
+}
 }
